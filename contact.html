@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-ar="تواصل معنا | موشن هاوس">Contact | MotionHouse</title>
+<meta name="description" content="Tell us your goals, your audience and your budget. MotionHouse will come back with a plan.">
+<meta name="theme-color" content="#0c0a0b">
+<script>(function(){try{var t=localStorage.getItem('mh-theme');if(t)document.documentElement.setAttribute('data-theme',t);if(localStorage.getItem('mh-lang')==='ar'){document.documentElement.lang='ar';document.documentElement.dir='rtl';}}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="icon.png">
+</head>
+<body data-page="contact">
+<div id="site-header"></div>
+
+<main id="main">
+<section class="band glow">
+  <div class="wrap c-grid">
+    <div class="c-left">
+      <div class="prose">
+        <p class="eyebrow rise" data-ar="تواصل معنا">Contact</p>
+        <h1 class="rise d1" style="font-size:clamp(2.3rem,5vw,4rem)" data-ar="لنجعل علامتك مرئية.">Let's get your brand seen.</h1>
+        <p class="lead rise d2" data-ar="أخبرنا بما تحتاجه وكم تريد أن تنفق تقريباً. سنعود إليك بخطة.">Tell us what you need and roughly what you'd like to spend. We'll come back with a plan.</p>
+      </div>
+      <div class="brief" aria-hidden="true">
+        <div class="brief-top"><i></i><span>campaign_brief</span></div>
+        <dl>
+          <div><dt>brand</dt><dd id="bBrand"></dd></div>
+          <div><dt>needs</dt><dd id="bNeed"></dd></div>
+          <div><dt>budget</dt><dd id="bBudget"></dd></div>
+          <div><dt>area</dt><dd id="bArea"></dd></div>
+          <div><dt>contact</dt><dd id="bContact"></dd></div>
+        </dl>
+        <div class="brief-cursor"><span></span></div>
+      </div>
+      <div class="direct">
+        <small data-ar="أو راسلنا مباشرة">Or email us directly</small>
+        <a id="mailLink" href="mailto:sales@motionhouse.me">sales@motionhouse.me</a>
+      </div>
+    </div>
+
+    <form class="cform" id="contactForm" novalidate>
+      <fieldset id="gNeed">
+        <legend><b>01</b><span data-ar="ماذا تحتاج؟">What do you need?</span></legend>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="need" value="Billboards" id="n1"><span data-ar="لوحات إعلانية">Billboards</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Digital screens" id="n2"><span data-ar="شاشات رقمية">Digital screens</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Buses & taxis" id="n3"><span data-ar="حافلات وسيارات أجرة">Buses &amp; taxis</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Kiosks" id="n4"><span data-ar="أكشاك">Kiosks</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Social media" id="n5"><span data-ar="تواصل اجتماعي">Social media</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Events" id="n6"><span data-ar="فعاليات">Events</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Radio" id="n7"><span data-ar="إذاعة">Radio</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Not sure yet" id="n8"><span data-ar="لست متأكداً بعد">Not sure yet</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><b>02</b><span data-ar="ميزانيتك التقريبية">Your rough budget</span></legend>
+        <div class="bud untouched" id="bud">
+          <div class="bud-read"><output class="bud-val" id="budgetVal" for="budget"></output><span class="bud-hint" id="budgetHint"></span></div>
+          <input class="cr" type="range" id="budget" min="0" max="7" step="1" value="2" aria-label="Approximate budget">
+          <div class="range-scale" dir="ltr"><span>AED 10k</span><span>AED 1M+</span></div>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="btype" value="One-off campaign" id="bt1" checked><span data-ar="حملة واحدة">One-off campaign</span></label>
+            <label class="opt"><input type="radio" name="btype" value="Per month" id="bt2"><span data-ar="شهرياً">Per month</span></label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset id="gArea">
+        <legend><b>03</b><span data-ar="أين تريد الظهور؟">Where do you want to be seen?</span></legend>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="area" value="Across the UAE" id="a0"><span data-ar="كل الإمارات">Across the UAE</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Abu Dhabi" id="a1"><span data-ar="أبوظبي">Abu Dhabi</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Dubai" id="a2"><span data-ar="دبي">Dubai</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Sharjah" id="a3"><span data-ar="الشارقة">Sharjah</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Ajman" id="a4"><span data-ar="عجمان">Ajman</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Umm Al Quwain" id="a5"><span data-ar="أم القيوين">Umm Al Quwain</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Ras Al Khaimah" id="a6"><span data-ar="رأس الخيمة">Ras Al Khaimah</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Fujairah" id="a7"><span data-ar="الفجيرة">Fujairah</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Not sure yet" id="a8"><span data-ar="لست متأكداً بعد">Not sure yet</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><b>04</b><span data-ar="كيف نتواصل معك؟">How do we reach you?</span></legend>
+        <div class="row2">
+          <label class="cf"><span data-ar="اسمك">Your name</span><input name="name" id="fName" autocomplete="name"></label>
+          <label class="cf"><span data-ar="العلامة أو الشركة">Brand or company</span><input name="company" id="fCompany" autocomplete="organization"></label>
+          <label class="cf"><span data-ar="البريد الإلكتروني">Email</span><input type="email" name="email" id="fEmail" autocomplete="email" dir="ltr"></label>
+          <label class="cf"><span data-ar="الهاتف">Phone</span><input type="tel" name="phone" id="fPhone" autocomplete="tel" dir="ltr"></label>
+        </div>
+        <p class="cnote" data-ar="أضف بريداً إلكترونياً أو رقم هاتف. يكفي واحد.">Add an email or a phone number. One is enough.</p>
+        <label class="cf"><span data-ar="أي تفاصيل أخرى؟ (اختياري)">Anything else? (optional)</span><textarea name="message" id="fMsg" placeholder="Launch date, audience, the emirate you care about most…" data-ar-placeholder="موعد الإطلاق، الجمهور، الإمارة الأهم لك…"></textarea></label>
+      </fieldset>
+
+      <button class="btn btn-hot c-send" type="submit" data-ar="أرسل ملخص حملتي">Send my brief</button>
+      <p class="status" id="formStatus" role="status"></p>
+      <div class="sent" id="sent" hidden>
+        <p class="cnote"><span data-ar="إذا لم يُفتح تطبيق البريد، انسخ الملخص وأرسله إلى">If your email app didn't open, copy your brief and send it to</span> <b id="mailText" dir="ltr">sales@motionhouse.me</b>.</p>
+        <pre id="briefText" dir="ltr"></pre>
+        <button class="btn" type="button" id="copyBtn" data-ar="انسخ الملخص">Copy brief</button>
+      </div>
+    </form>
+  </div>
+</section>
+</main>
+
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script src="contact.js"></script>
+</body>
+</html>
