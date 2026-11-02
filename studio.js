@@ -2,8 +2,8 @@
   const cv = document.getElementById("studioCanvas");
   if (!cv) return;
   const ctx = cv.getContext("2d"), W = cv.width, H = cv.height;
-  const DISPLAY = '"Archivo Black","Cairo",Impact,sans-serif';
-  const BODY = '"Archivo","Cairo",system-ui,sans-serif';
+  const DISPLAY = '"Archivo Black",Impact,sans-serif';
+  const BODY = '"Archivo",system-ui,sans-serif';
   const state = { name: "", tag: "", color: "#95122C", scene: "billboard", mode: "text", img: null };
   const T = (en, ar) => window.MH ? window.MH.t(en, ar) : en;
   /* draw an uploaded image to fill a box, cropping the overflow */
