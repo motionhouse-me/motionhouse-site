@@ -35,7 +35,7 @@
   var foot = document.getElementById("site-footer");
   if (foot) foot.outerHTML =
     '<footer class="foot"><div class="wrap foot-in">' + logo() +
-    "<ul>" + links(false) + "</ul>" +
+    "<ul>" + links(false) + '<li><a href="login.html">Staff login</a></li>' + "</ul>" +
     '<p><span dir="ltr">© ' + new Date().getFullYear() + '</span> <span>MotionHouse. United Arab Emirates.</span></p>' +
     "</div></footer>";
 
