@@ -1,210 +1,185 @@
+/* MotionHouse — "Picture your brand here".
+   Draws the visitor's brand (or uploaded ad) onto real billboard photos, in perspective. */
 (function(){
-  const cv = document.getElementById("studioCanvas");
+  var cv = document.getElementById("studioCanvas");
   if (!cv) return;
-  const ctx = cv.getContext("2d"), W = cv.width, H = cv.height;
-  const DISPLAY = '"Archivo Black",Impact,sans-serif';
-  const BODY = '"Archivo",system-ui,sans-serif';
-  const state = { name: "", tag: "", color: "#95122C", scene: "billboard", mode: "text", img: null };
-  const T = (en, ar) => window.MH ? window.MH.t(en, ar) : en;
-  /* draw an uploaded image to fill a box, cropping the overflow */
-  function cover(img, x, y, w, h){
-    const r = Math.max(w / img.width, h / img.height), iw = img.width * r, ih = img.height * r;
-    ctx.drawImage(img, x + (w - iw) / 2, y + (h - ih) / 2, iw, ih);
-  }
-  const useImg = () => state.mode === "image" && state.img;
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const $ = (id) => document.getElementById(id);
+  var ctx = cv.getContext("2d");
+  var $ = function(id){ return document.getElementById(id); };
+  var DISPLAY = '"Archivo Black","Arial Black",Impact,sans-serif';
+  var BODY = '"Archivo",system-ui,sans-serif';
 
-  /* ---- helpers ---- */
-  function rgb(h){ h = h.replace("#",""); if (h.length === 3) h = h.split("").map(c => c + c).join(""); const n = parseInt(h,16); return [n>>16&255, n>>8&255, n&255]; }
-  function mix(h, to, a){ const c = rgb(h), t = rgb(to); return "rgb(" + c.map((v,i) => Math.round(v + (t[i]-v)*a)).join(",") + ")"; }
-  function lum(h){ const [r,g,b] = rgb(h).map(v => { v /= 255; return v <= .03928 ? v/12.92 : Math.pow((v+.055)/1.055, 2.4); }); return .2126*r + .7152*g + .0722*b; }
-  const ink = (h) => lum(h) > .45 ? "#111111" : "#ffffff";
-  function rr(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
-  function fit(text, maxW, size, font, weight){ let s = size; const w = weight ? weight + " " : ""; ctx.font = w + s + "px " + font; while (ctx.measureText(text).width > maxW && s > 16){ s -= 2; ctx.font = w + s + "px " + font; } return s; }
-  function heart(x,y,s){ ctx.beginPath(); ctx.moveTo(x,y+s*.35); ctx.bezierCurveTo(x-s,y-s*.3,x-s*.5,y-s,x,y-s*.45); ctx.bezierCurveTo(x+s*.5,y-s,x+s,y-s*.3,x,y+s*.35); ctx.fill(); }
-  const label = () => state.name.trim() || T("Your Brand", "علامتك");
+  /* Each scene: the photo, and the four corners of the screen in it (top-left, top-right, bottom-right, bottom-left). */
+  var SCENES = {
+    unipole: { src: "unipole.jpg", w: 1037, h: 687, quad: [[273,163],[1000,108],[1000,547],[272,545]], kind: "board" },
+    gantry:  { src: "gantry.jpg",  w: 1040, h: 687, quad: [[67,196],[887,94],[890,398],[65,447]],    kind: "wide" },
+    mall:    { src: "mall-screen.jpg", w: 910, h: 1264, quad: [[285,291],[627,291],[627,897],[285,897]], kind: "tall", glow: true },
+    phone:   { src: "social.jpg",  w: 1541, h: 672, quad: [[646,190],[909,190],[909,471],[647,472]], kind: "post", glow: true }
+  };
+  var state = { scene: "unipole", name: "", tag: "", color: "#95122C", img: null };
+  var photos = {};
 
-  /* ---- night skyline, drawn once ---- */
-  const bg = document.createElement("canvas"); bg.width = W; bg.height = H;
-  (function(){
-    const g = bg.getContext("2d"); let s = 7; const rnd = () => { s = (s*16807) % 2147483647; return s/2147483647; };
-    const sky = g.createLinearGradient(0,0,0,H); sky.addColorStop(0,"#050507"); sky.addColorStop(.65,"#1a0a10"); sky.addColorStop(1,"#2b0d17");
-    g.fillStyle = sky; g.fillRect(0,0,W,H);
-    for (let i = 0; i < 70; i++){ g.fillStyle = "rgba(255,255,255," + (.15 + rnd()*.5) + ")"; g.fillRect(rnd()*W, rnd()*H*.5, 1.5, 1.5); }
-    let x = -20;
-    while (x < W){
-      const bw = 50 + rnd()*90, bh = 120 + rnd()*300;
-      g.fillStyle = "rgb(" + (10+rnd()*8|0) + "," + (10+rnd()*8|0) + "," + (14+rnd()*10|0) + ")";
-      g.fillRect(x, H-bh, bw, bh);
-      for (let wy = H-bh+14; wy < H-10; wy += 16) for (let wx = x+8; wx < x+bw-8; wx += 14){
-        if (rnd() > .72){ g.fillStyle = "rgba(255," + (200+rnd()*40|0) + "," + (140+rnd()*60|0) + "," + (.25+rnd()*.4) + ")"; g.fillRect(wx, wy, 5, 7); }
-      }
-      x += bw + 4;
-    }
-  })();
-
-  /* ---- LED dot pattern ---- */
-  const dots = (function(){
-    const p = document.createElement("canvas"); p.width = p.height = 6; const g = p.getContext("2d");
-    g.fillStyle = "rgba(0,0,0,.62)"; g.fillRect(0,0,6,6);
-    g.globalCompositeOperation = "destination-out"; g.beginPath(); g.arc(3,3,1.9,0,7); g.fill();
-    return ctx.createPattern(p, "repeat");
-  })();
-
-  function mark(){
-    ctx.save(); ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
-    ctx.font = "700 18px " + BODY; ctx.fillStyle = "rgba(255,255,255,.55)";
-    ctx.fillText("Made with MotionHouse", W-28, H-26); ctx.restore();
-  }
-
-  /* ---- scene 1: billboard ---- */
-  function billboard(t){
-    const c = state.color, X = 150, Y = 80, BW = 980, BH = 470, tag = state.tag.trim();
-    ctx.fillStyle = "#15151a"; ctx.fillRect(380, Y+BH, 34, H-(Y+BH)); ctx.fillRect(866, Y+BH, 34, H-(Y+BH));
-    ctx.save(); ctx.shadowColor = c; ctx.shadowBlur = 70; ctx.fillStyle = "#0c0c0f"; rr(X-14, Y-14, BW+28, BH+28, 10); ctx.fill(); ctx.restore();
-    const gr = ctx.createLinearGradient(X, Y, X+BW, Y+BH); gr.addColorStop(0, c); gr.addColorStop(1, mix(c,"#000000",.65));
-    ctx.save(); ctx.beginPath(); ctx.rect(X, Y, BW, BH); ctx.clip();
-    ctx.fillStyle = gr; ctx.fillRect(X, Y, BW, BH);
-    if (useImg()) cover(state.img, X, Y, BW, BH);
-    const p = reduce ? .35 : ((t/2600) % 1.5) - .25, bx = X + p*BW;
-    const band = ctx.createLinearGradient(bx-120, 0, bx+120, 0);
-    band.addColorStop(0,"rgba(255,255,255,0)"); band.addColorStop(.5,"rgba(255,255,255,.16)"); band.addColorStop(1,"rgba(255,255,255,0)");
-    ctx.fillStyle = band; ctx.fillRect(bx-120, Y, 240, BH);
-    const col = ink(c), name = label().toUpperCase(), s = fit(name, BW-120, 150, DISPLAY);
-    ctx.font = s + "px " + DISPLAY; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 24; ctx.globalAlpha = reduce ? 1 : .94 + .06*Math.sin(t/180);
-    const ny = Y + BH/2 - (tag ? 36 : 0);
-    if (!useImg()) ctx.fillText(name, X+BW/2, ny);
-    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
-    if (tag && !useImg()){ const ts = fit(tag, BW-200, 44, BODY, "700"); ctx.font = "700 " + ts + "px " + BODY; ctx.fillText(tag, X+BW/2, ny + s*.55 + 28); }
-    ctx.fillStyle = dots; ctx.fillRect(X, Y, BW, BH);
-    ctx.restore();
-    for (let i = 0; i < 6; i++){ ctx.fillStyle = "#fff2c6"; ctx.beginPath(); ctx.arc(X+80+i*164, Y-28, 4, 0, 7); ctx.fill(); }
-  }
-
-  /* ---- scene 2: bus wrap ---- */
-  function bus(){
-    const c = state.color, X = 100, Y = 250, BW = 1080, BH = 260, tag = state.tag.trim();
-    ctx.fillStyle = "#0d0d10"; ctx.fillRect(0, 530, W, H-530);
-    ctx.fillStyle = "rgba(255,255,255,.25)"; for (let x = 20; x < W; x += 120) ctx.fillRect(x, 640, 60, 6);
-    ctx.fillStyle = "rgba(0,0,0,.5)"; ctx.beginPath(); ctx.ellipse(X+BW/2, 540, BW/2, 14, 0, 0, 7); ctx.fill();
-    ctx.save(); rr(X, Y, BW, BH, 34); ctx.fillStyle = "#f2f2f4"; ctx.fill(); ctx.clip();
-    const wr = ctx.createLinearGradient(X, Y, X+BW, Y+BH); wr.addColorStop(0, c); wr.addColorStop(1, mix(c,"#000000",.5));
-    ctx.fillStyle = wr; ctx.fillRect(X, Y+86, BW, BH-86);
-    if (useImg()) cover(state.img, X, Y+86, BW*.84, BH-86);
-    const a = X + BW*.7;
-    ctx.fillStyle = "rgba(255,255,255,.12)"; ctx.beginPath(); ctx.moveTo(a, Y+86); ctx.lineTo(a+120, Y+86); ctx.lineTo(a+20, Y+BH); ctx.lineTo(a-100, Y+BH); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = "#18232d"; for (let i = 0; i < 7; i++){ rr(X+40+i*138, Y+16, 112, 60, 10); ctx.fill(); }
-    rr(X+BW-150, Y+16, 110, BH-40, 10); ctx.fill();
-    const col = ink(c), name = label().toUpperCase(), s = fit(name, 780, 110, DISPLAY);
-    ctx.font = s + "px " + DISPLAY; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = col;
-    const ty = Y + 86 + (BH-86)/2 - (tag ? 14 : 0);
-    if (!useImg()) ctx.fillText(name, X+470, ty);
-    if (tag && !useImg()){ const ts = fit(tag, 780, 34, BODY, "700"); ctx.font = "700 " + ts + "px " + BODY; ctx.fillText(tag, X+470, ty + s*.55 + 14); }
-    ctx.restore();
-    [[X+230, Y+BH], [X+BW-230, Y+BH]].forEach(function(w){
-      ctx.fillStyle = "#0a0a0c"; ctx.beginPath(); ctx.arc(w[0], w[1], 50, 0, 7); ctx.fill();
-      ctx.fillStyle = "#5a5a63"; ctx.beginPath(); ctx.arc(w[0], w[1], 22, 0, 7); ctx.fill();
+  function load(key){
+    return new Promise(function(res){
+      if (photos[key]) return res(photos[key]);
+      var im = new Image(); im.onload = function(){ photos[key] = im; res(im); }; im.src = SCENES[key].src;
     });
-    ctx.fillStyle = "#ffe8a8"; rr(X+BW-18, Y+BH-70, 12, 26, 4); ctx.fill();
   }
 
-  /* ---- scene 3: phone feed ---- */
-  function phone(){
-    const c = state.color, px = 490, py = 30, pw = 300, ph = 660, tag = state.tag.trim();
-    const gl = ctx.createRadialGradient(W/2, H/2, 40, W/2, H/2, 420); gl.addColorStop(0, mix(c,"#000000",.35)); gl.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = gl; ctx.fillRect(0, 0, W, H);
-    ctx.save(); ctx.shadowColor = c; ctx.shadowBlur = 60; rr(px, py, pw, ph, 46); ctx.fillStyle = "#0b0b0d"; ctx.fill(); ctx.restore();
-    const sx = px+10, sy = py+10, sw = pw-20, sh = ph-20;
-    ctx.save(); rr(sx, sy, sw, sh, 38); ctx.clip();
-    const sg = ctx.createLinearGradient(0, sy, 0, sy+sh); sg.addColorStop(0, c); sg.addColorStop(1, mix(c,"#000000",.7));
-    ctx.fillStyle = sg; ctx.fillRect(sx, sy, sw, sh);
-    ctx.fillStyle = "rgba(255,255,255,.08)"; ctx.beginPath(); ctx.arc(sx+sw*.3, sy+sh*.38, 150, 0, 7); ctx.fill();
-    if (useImg()) cover(state.img, sx, sy, sw, sh);
-    const col = ink(c), name = label().toUpperCase();
-    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = col;
-    ctx.font = "700 15px " + BODY; ctx.globalAlpha = .65; ctx.fillText("Following", sx+sw/2-52, sy+52); ctx.globalAlpha = 1; ctx.fillText("For you", sx+sw/2+36, sy+52);
-    ctx.fillRect(sx+sw/2+19, sy+64, 34, 3);
-    const s = fit(name, sw-70, 56, DISPLAY); ctx.font = s + "px " + DISPLAY; if (!useImg()) ctx.fillText(name, sx+sw/2-8, sy+sh*.42);
-    if (tag && !useImg()){ const ts = fit(tag, sw-70, 22, BODY, "700"); ctx.font = "700 " + ts + "px " + BODY; ctx.fillText(tag, sx+sw/2-8, sy+sh*.42 + s*.6 + 18); }
-    ctx.fillStyle = "#0b0b0d"; rr(sx+sw/2-45, sy+10, 90, 24, 12); ctx.fill();
-    for (let i = 0; i < 4; i++){
-      ctx.fillStyle = "rgba(255,255,255,.2)"; ctx.beginPath(); ctx.arc(sx+sw-32, sy+sh*.5+i*62, 20, 0, 7); ctx.fill();
-      ctx.fillStyle = "#fff"; if (i === 0) heart(sx+sw-32, sy+sh*.5, 11); else { ctx.beginPath(); ctx.arc(sx+sw-32, sy+sh*.5+i*62, 5, 0, 7); ctx.fill(); }
+  /* ---------- colour helpers ---------- */
+  function rgb(h){ h = h.replace("#",""); var n = parseInt(h,16); return [n>>16&255, n>>8&255, n&255]; }
+  function mix(h, to, a){ var c = rgb(h), t = rgb(to); return "rgb(" + c.map(function(v,i){ return Math.round(v + (t[i]-v)*a); }).join(",") + ")"; }
+  function lum(h){ var c = rgb(h).map(function(v){ v/=255; return v <= .03928 ? v/12.92 : Math.pow((v+.055)/1.055, 2.4); }); return .2126*c[0] + .7152*c[1] + .0722*c[2]; }
+  function fit(g, text, maxW, size, font){ var s = size; g.font = font.replace("{s}", s); while (g.measureText(text).width > maxW && s > 10){ s -= 2; g.font = font.replace("{s}", s); } return s; }
+
+  /* ---------- the ad itself, drawn flat ---------- */
+  function drawAd(kind){
+    var dims = { board: [1200, 700], wide: [1500, 520], tall: [600, 1060], post: [800, 850] }[kind];
+    var W = dims[0], H = dims[1];
+    var a = document.createElement("canvas"); a.width = W; a.height = H;
+    var g = a.getContext("2d");
+
+    if (state.img){
+      var im = state.img, r = Math.max(W / im.width, H / im.height);
+      g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
+      g.drawImage(im, (W - im.width * r) / 2, (H - im.height * r) / 2, im.width * r, im.height * r);
+      return a;
     }
-    const handle = "@" + (state.name.toLowerCase().replace(/[^a-z0-9]/g, "") || "yourbrand");
-    ctx.textAlign = "left"; ctx.fillStyle = "#fff"; ctx.font = "700 18px " + BODY; ctx.fillText(handle, sx+22, sy+sh-96);
-    ctx.fillStyle = "rgba(255,255,255,.75)"; rr(sx+22, sy+sh-76, 170, 10, 5); ctx.fill();
-    ctx.fillStyle = "rgba(255,255,255,.45)"; rr(sx+22, sy+sh-56, 120, 10, 5); ctx.fill();
-    ctx.fillStyle = "rgba(255,255,255,.25)"; rr(sx+22, sy+sh-26, sw-44, 4, 2); ctx.fill();
-    ctx.fillStyle = "#fff"; rr(sx+22, sy+sh-26, (sw-44)*.45, 4, 2); ctx.fill();
+
+    var c = state.color, light = lum(c) > .5, ink = light ? "#111" : "#fff";
+    var bg = g.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, light ? c : mix(c, "#000000", .55)); bg.addColorStop(1, c);
+    g.fillStyle = bg; g.fillRect(0, 0, W, H);
+
+    var name = state.name.trim() || "Your Brand", tag = state.tag.trim();
+    var pad = Math.round(Math.min(W, H) * .1);
+    g.fillStyle = ink; g.textBaseline = "alphabetic";
+
+    if (kind === "tall"){
+      g.textAlign = "left";
+      var s1 = fit(g, name, W - pad * 2, 130, "{s}px " + DISPLAY);
+      g.fillText(name, pad, H * .42);
+      if (tag){ var t1 = fit(g, tag, W - pad * 2, 44, "600 {s}px " + BODY); g.globalAlpha = .85; g.fillText(tag, pad, H * .42 + s1 * .4 + t1 + 20); g.globalAlpha = 1; }
+    } else {
+      g.textAlign = "center";
+      var maxS = { board: 170, wide: 160, post: 120 }[kind];
+      var s = fit(g, name, W - pad * 2, maxS, "{s}px " + DISPLAY);
+      var y = H / 2 + s * .32 - (tag ? s * .3 : 0);
+      g.fillText(name, W / 2, y);
+      if (tag){ var t = fit(g, tag, W - pad * 2, Math.round(s * .34), "600 {s}px " + BODY); g.globalAlpha = .85; g.fillText(tag, W / 2, y + t + s * .32); g.globalAlpha = 1; }
+    }
+    g.globalAlpha = .7; g.textAlign = "right"; g.font = "700 " + Math.round(Math.min(W, H) * .035) + "px " + BODY;
+    g.fillText("Set your brand in motion", W - pad * .6, H - pad * .5);
+    return a;
+  }
+
+  /* ---------- perspective warp: map the flat ad onto the 4 corners ---------- */
+  function homography(q, W, H){
+    var s = [[0,0],[W,0],[W,H],[0,H]], A = [], b = [];
+    for (var i = 0; i < 4; i++){
+      var x = s[i][0], y = s[i][1], u = q[i][0], v = q[i][1];
+      A.push([x, y, 1, 0, 0, 0, -u*x, -u*y]); b.push(u);
+      A.push([0, 0, 0, x, y, 1, -v*x, -v*y]); b.push(v);
+    }
+    for (var c = 0; c < 8; c++){
+      var p = c; for (var r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
+      var tA = A[c]; A[c] = A[p]; A[p] = tA; var tb = b[c]; b[c] = b[p]; b[p] = tb;
+      for (r = c + 1; r < 8; r++){ var f = A[r][c] / A[c][c]; for (var k = c; k < 8; k++) A[r][k] -= f * A[c][k]; b[r] -= f * b[c]; }
+    }
+    var h = new Array(8);
+    for (r = 7; r >= 0; r--){ var sum = b[r]; for (k = r + 1; k < 8; k++) sum -= A[r][k] * h[k]; h[r] = sum / A[r][r]; }
+    return function(x, y){ var d = h[6]*x + h[7]*y + 1; return [(h[0]*x + h[1]*y + h[2]) / d, (h[3]*x + h[4]*y + h[5]) / d]; };
+  }
+  function tri(img, s0, s1, s2, d0, d1, d2){
+    var cx = (d0[0] + d1[0] + d2[0]) / 3, cy = (d0[1] + d1[1] + d2[1]) / 3;
+    var grow = function(p){ var dx = p[0] - cx, dy = p[1] - cy, l = Math.hypot(dx, dy) || 1; return [p[0] + dx / l * .9, p[1] + dy / l * .9]; };
+    var e0 = grow(d0), e1 = grow(d1), e2 = grow(d2);
+    ctx.save();
+    ctx.beginPath(); ctx.moveTo(e0[0], e0[1]); ctx.lineTo(e1[0], e1[1]); ctx.lineTo(e2[0], e2[1]); ctx.closePath(); ctx.clip();
+    var den = s0[0]*(s1[1]-s2[1]) + s1[0]*(s2[1]-s0[1]) + s2[0]*(s0[1]-s1[1]);
+    var a = (d0[0]*(s1[1]-s2[1]) + d1[0]*(s2[1]-s0[1]) + d2[0]*(s0[1]-s1[1])) / den;
+    var b = (d0[1]*(s1[1]-s2[1]) + d1[1]*(s2[1]-s0[1]) + d2[1]*(s0[1]-s1[1])) / den;
+    var c = (d0[0]*(s2[0]-s1[0]) + d1[0]*(s0[0]-s2[0]) + d2[0]*(s1[0]-s0[0])) / den;
+    var d = (d0[1]*(s2[0]-s1[0]) + d1[1]*(s0[0]-s2[0]) + d2[1]*(s1[0]-s0[0])) / den;
+    var e = (d0[0]*(s1[0]*s2[1]-s2[0]*s1[1]) + d1[0]*(s2[0]*s0[1]-s0[0]*s2[1]) + d2[0]*(s0[0]*s1[1]-s1[0]*s0[1])) / den;
+    var f = (d0[1]*(s1[0]*s2[1]-s2[0]*s1[1]) + d1[1]*(s2[0]*s0[1]-s0[0]*s2[1]) + d2[1]*(s0[0]*s1[1]-s1[0]*s0[1])) / den;
+    ctx.setTransform(a, b, c, d, e, f);
+    ctx.drawImage(img, 0, 0);
     ctx.restore();
   }
-
-  /* ---- draw + animate ---- */
-  const scenes = { billboard: billboard, bus: bus, phone: phone };
-  const names = { billboard: ["a billboard","لوحة إعلانية"], bus: ["a bus","حافلة"], phone: ["a phone feed","شاشة هاتف"] };
-  function draw(t){
-    ctx.clearRect(0, 0, W, H); ctx.drawImage(bg, 0, 0);
-    scenes[state.scene](t || 0); mark();
-    cv.setAttribute("aria-label", T("Preview of " + (useImg() ? "your image" : label()) + " on " + names[state.scene][0], "معاينة على " + names[state.scene][1]));
+  function warp(ad, q){
+    var W = ad.width, H = ad.height, map = homography(q, W, H), N = 14;
+    for (var i = 0; i < N; i++) for (var j = 0; j < N; j++){
+      var x0 = W*i/N, x1 = W*(i+1)/N, y0 = H*j/N, y1 = H*(j+1)/N;
+      var p00 = map(x0,y0), p10 = map(x1,y0), p11 = map(x1,y1), p01 = map(x0,y1);
+      tri(ad, [x0,y0],[x1,y0],[x1,y1], p00,p10,p11);
+      tri(ad, [x0,y0],[x1,y1],[x0,y1], p00,p11,p01);
+    }
   }
-  let raf = 0, visible = true;
-  function loop(t){ raf = 0; draw(t); if (state.scene === "billboard" && !reduce && visible) raf = requestAnimationFrame(loop); }
-  function kick(){ if (!raf) raf = requestAnimationFrame(loop); }
-  if ("IntersectionObserver" in window) new IntersectionObserver(function(e){ visible = e[0].isIntersecting; if (visible) kick(); }).observe(cv);
 
-  /* ---- controls ---- */
-  const swatches = document.querySelectorAll(".swatch");
-  function setColor(c){
-    state.color = c; $("sColor").value = c;
-    swatches.forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.c.toLowerCase() === c.toLowerCase()); });
-    kick();
+  /* ---------- draw ---------- */
+  var drawing = 0;
+  function draw(){
+    var id = ++drawing, sc = SCENES[state.scene];
+    load(state.scene).then(function(photo){
+      if (id !== drawing) return;
+      cv.width = sc.w; cv.height = sc.h;
+      cv.classList.toggle("tall", sc.h > sc.w);
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.drawImage(photo, 0, 0);
+      warp(drawAd(sc.kind), sc.quad);
+      /* soft light so it sits in the photo */
+      var q = sc.quad;
+      ctx.save(); ctx.beginPath(); ctx.moveTo(q[0][0], q[0][1]); for (var k = 1; k < 4; k++) ctx.lineTo(q[k][0], q[k][1]); ctx.closePath(); ctx.clip();
+      var sh = ctx.createLinearGradient(q[0][0], q[0][1], q[2][0], q[2][1]);
+      sh.addColorStop(0, "rgba(255,255,255,.10)"); sh.addColorStop(.5, "rgba(255,255,255,0)"); sh.addColorStop(1, "rgba(0,0,0,.18)");
+      ctx.fillStyle = sh; ctx.fillRect(0, 0, sc.w, sc.h); ctx.restore();
+      if (sc.kind === "post"){
+        /* replace the handle under the post */
+        ctx.fillStyle = "#121212"; ctx.fillRect(642, 505, 230, 30);
+        ctx.fillStyle = "#fff"; ctx.font = "600 15px " + BODY; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+        ctx.fillText("@" + ((state.name || "yourbrand").toLowerCase().replace(/[^a-z0-9_.]/g, "") || "yourbrand"), 647, 520);
+      }
+      cv.setAttribute("aria-label", (state.img ? "Your ad" : (state.name || "Your brand")) + " shown on a " + ({ unipole: "roadside billboard", gantry: "highway billboard", mall: "mall screen", phone: "phone feed" })[state.scene]);
+    });
   }
-  $("sName").addEventListener("input", function(e){ state.name = e.target.value; kick(); });
-  $("sTag").addEventListener("input", function(e){ state.tag = e.target.value; kick(); });
+
+  /* ---------- controls ---------- */
+  $("sName").addEventListener("input", function(e){ state.name = e.target.value; draw(); });
+  $("sTag").addEventListener("input", function(e){ state.tag = e.target.value; draw(); });
+  var sw = document.querySelectorAll(".swatch");
+  function setColor(c){ state.color = c; $("sColor").value = c; sw.forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.c.toLowerCase() === c.toLowerCase()); }); draw(); }
+  sw.forEach(function(b){ b.addEventListener("click", function(){ setColor(b.dataset.c); }); });
   $("sColor").addEventListener("input", function(e){ setColor(e.target.value); });
-  swatches.forEach(function(b){ b.addEventListener("click", function(){ setColor(b.dataset.c); }); });
+
   document.querySelectorAll("#sceneSeg button").forEach(function(b){
     b.addEventListener("click", function(){
       state.scene = b.dataset.scene;
       document.querySelectorAll("#sceneSeg button").forEach(function(x){ x.setAttribute("aria-pressed", x === b); });
-      kick();
+      draw();
     });
-  });
-  /* text or uploaded image */
-  function setMode(m){
-    state.mode = m;
-    document.querySelectorAll("#modeSeg button").forEach(function(x){ x.setAttribute("aria-pressed", x.dataset.mode === m); });
-    $("textCtrls").hidden = m !== "text"; $("imageCtrls").hidden = m !== "image";
-    kick();
-  }
-  document.querySelectorAll("#modeSeg button").forEach(function(b){ b.addEventListener("click", function(){ setMode(b.dataset.mode); }); });
-  function loadFile(file){
-    if (!file || !/^image\//.test(file.type)) return;
-    const url = URL.createObjectURL(file), img = new Image();
-    img.onload = function(){ state.img = img; $("fileName").textContent = file.name; $("fileRow").hidden = false; setMode("image"); };
-    img.src = url;
-  }
-  $("sFile").addEventListener("change", function(e){ loadFile(e.target.files[0]); });
-  const drop = $("drop");
-  ["dragenter","dragover"].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add("over"); }); });
-  ["dragleave","drop"].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.remove("over"); }); });
-  drop.addEventListener("drop", function(e){ loadFile(e.dataTransfer.files[0]); });
-  $("clearFile").addEventListener("click", function(){ state.img = null; $("sFile").value = ""; $("fileRow").hidden = true; kick(); });
-  document.addEventListener("mh:lang", kick);
-  $("sDownload").addEventListener("click", function(){
-    draw(performance.now());
-    cv.toBlob(function(blob){
-      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "my-brand-in-motion.png"; a.click();
-      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
-    });
-  });
-  $("sPlan").addEventListener("click", function(e){
-    e.currentTarget.href = "contact.html?brand=" + encodeURIComponent(state.name.trim()) + "&color=" + encodeURIComponent(state.color);
   });
 
-  kick();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(kick);
+  $("sFile").addEventListener("change", function(e){
+    var f = e.target.files[0]; if (!f || !/^image\//.test(f.type)) return;
+    var im = new Image();
+    im.onload = function(){ state.img = im; $("upLabel").textContent = f.name.length > 22 ? f.name.slice(0, 20) + "…" : f.name; $("clearFile").hidden = false; draw(); };
+    im.src = URL.createObjectURL(f);
+  });
+  $("clearFile").addEventListener("click", function(){ state.img = null; $("sFile").value = ""; $("upLabel").textContent = "Upload image"; this.hidden = true; draw(); });
+
+  $("sDownload").addEventListener("click", function(){
+    try {
+      cv.toBlob(function(blob){
+        var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "my-brand-motionhouse.png"; a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1500);
+      });
+    } catch (err) {}
+  });
+  $("sPlan").addEventListener("click", function(e){
+    var n = state.name.trim();
+    e.currentTarget.href = "contact.html" + (n ? "?brand=" + encodeURIComponent(n) : "");
+  });
+
+  draw();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
 })();
