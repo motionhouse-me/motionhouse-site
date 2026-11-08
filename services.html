@@ -6,7 +6,7 @@
 <title>Services | MotionHouse</title>
 <meta name="description" content="Billboards, digital screens, buses and taxis, kiosks, social media, events and radio across the UAE. One team, every kind of media.">
 <meta name="theme-color" content="#0c0a0b">
-<script>(function(){try{var t=localStorage.getItem('mh-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script>(function(){var t=null;try{t=localStorage.getItem('mh-theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);var l=t?t==='light':window.matchMedia('(prefers-color-scheme: light)').matches;if(l)document.documentElement.classList.add('is-light');})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -21,7 +21,7 @@
 <section class="page-head glow">
   <div class="wrap">
     <p class="eyebrow rise">Services</p>
-    <h1 class="rise d1">Every kind of media. One team.</h1>
+    <h1 class="rise d1">Everywhere your customers look.</h1>
     <p class="lead rise d2">Pick one, mix a few, or let us build the whole campaign.</p>
   </div>
 </section>
@@ -47,7 +47,7 @@
       </article>
       <article class="mcard">
         <figure><img src="social.jpg" alt="A hand holding a phone showing a social media feed" loading="lazy" width="1541" height="672"></figure>
-        <div class="mbody"><span class="mtag">TikTok · Instagram</span><h3>Social media</h3><p>Content, paid ads and community management, with weekly reports.</p><p class="great"><b>Great for</b> younger audiences and building a community.</p></div>
+        <div class="mbody"><span class="mtag">TikTok · Instagram</span><h3>Social</h3><p>Content, paid ads and community management, with weekly reports.</p><p class="great"><b>Great for</b> younger audiences and building a community.</p></div>
       </article>
       <article class="mcard">
         <figure><img src="events.jpg" alt="A launch event with a stage and a large crowd" loading="lazy" width="1541" height="672"></figure>
@@ -66,7 +66,7 @@
     <div class="head">
       <p class="eyebrow">Where we advertise</p>
       <h2>Everywhere your audience is.</h2>
-      <p class="lead">Pick an emirate to light it up on the map, or pick a type of media to see where it's available.</p>
+      <p class="lead">Pick an emirate to light it up on the map, or pick a format to see where it's available.</p>
     </div>
     <div class="mapbox">
       <div class="map-stage">
@@ -74,7 +74,7 @@
       </div>
       <div class="map-side">
         <div class="fld"><span>Emirate</span><div class="chips" id="emiratePick"></div></div>
-        <div class="fld"><span>Type of media</span><div class="chips" id="mapFilters"></div></div>
+        <div class="fld"><span>Format</span><div class="chips" id="mapFilters"></div></div>
         <div class="map-panel" aria-live="polite">
           <h3 id="mpName"></h3>
           <p class="mp-sub" id="mpSub"></p>
