@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Staff Login | MotionHouse</title>
+<meta name="description" content="MotionHouse team email login.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0c0a0b">
+<script>(function(){var t=null;try{t=localStorage.getItem('mh-theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);var l=t?t==='light':window.matchMedia('(prefers-color-scheme: light)').matches;if(l)document.documentElement.classList.add('is-light');})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="icon.png">
+<style>
+  .tl{min-height:calc(100vh - 74px);display:grid;place-items:center}
+  .tl-card{width:100%;max-width:440px;background:var(--card);border:1px solid var(--line);padding:clamp(28px,5vw,44px);display:grid;gap:22px}
+  .tl-card h1{font-size:clamp(2rem,5vw,2.6rem)}
+  .tl-card .lead{font-size:1rem}
+  .tl-f{display:grid;gap:8px}
+  .tl-f span{font:500 .76rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .tl-f input{width:100%;padding:14px 16px;font:400 1rem var(--body);color:var(--text);background:var(--bg);border:1.5px solid var(--line-strong);border-radius:0;outline:none;transition:border-color .2s}
+  .tl-f input:focus{border-color:var(--accent)}
+  .tl-row{display:flex}
+  .tl-row input{flex:1;min-width:0;border-right:0}
+  .tl-row b{display:grid;place-items:center;padding:0 14px;font:500 .95rem var(--body);color:var(--muted);background:var(--bg-alt);border:1.5px solid var(--line-strong);white-space:nowrap}
+  .tl-card .btn{width:100%}
+  .tl-help{font-size:.88rem;color:var(--muted)}
+  .tl-help a{color:var(--accent)}
+  .tl-err{font-size:.88rem;color:var(--accent);min-height:1em}
+</style>
+</head>
+<body data-page="login">
+<div id="site-header"></div>
+
+<main id="main">
+<section class="band glow tl">
+  <div class="wrap" style="display:grid;place-items:center">
+    <form class="tl-card" id="tlForm" method="post" action="https://webmail.motionhouse.me/login/" novalidate>
+      <div style="display:grid;gap:12px">
+        <p class="eyebrow">Staff only</p>
+        <h1>Staff login</h1>
+        <p class="lead">Sign in with your MotionHouse email and password to open your inbox.</p>
+      </div>
+
+      <label class="tl-f"><span>Email</span>
+        <div class="tl-row">
+          <input id="tlUser" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="yourname" dir="ltr" required>
+          <b dir="ltr">@motionhouse.me</b>
+        </div>
+      </label>
+
+      <label class="tl-f"><span>Password</span>
+        <input id="tlPass" name="pass" type="password" autocomplete="current-password" dir="ltr" required>
+      </label>
+
+      <input type="hidden" name="user" id="tlFull">
+      <input type="hidden" name="goto_uri" value="/">
+
+      <p class="tl-err" id="tlErr" role="alert"></p>
+      <button class="btn btn-hot" type="submit">Open my inbox</button>
+      <p class="tl-help">Forgot your password? Ask your manager to reset it.</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script>
+(function(){
+  var form = document.getElementById("tlForm"),
+      user = document.getElementById("tlUser"),
+      pass = document.getElementById("tlPass"),
+      full = document.getElementById("tlFull"),
+      err  = document.getElementById("tlErr");
+  try { var last = localStorage.getItem("mh-team-user"); if (last) user.value = last; } catch (e) {}
+  (user.value ? pass : user).focus();
+  form.addEventListener("submit", function(e){
+    var u = user.value.trim().toLowerCase().replace(/@motionhouse\.me$/, "");
+    if (!u || u.indexOf("@") > -1) { e.preventDefault(); err.textContent = "Enter the part of your email before @motionhouse.me."; user.focus(); return; }
+    if (!pass.value) { e.preventDefault(); err.textContent = "Enter your password."; pass.focus(); return; }
+    err.textContent = "";
+    full.value = u + "@motionhouse.me";
+    try { localStorage.setItem("mh-team-user", u); } catch (e2) {}
+  });
+})();
+</script>
+</body>
+</html>
