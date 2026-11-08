@@ -10,7 +10,7 @@
      ===================================================================== */
   var MEDIA = {
     ooh:["Billboards","لوحات إعلانية"], dooh:["Digital screens","شاشات رقمية"], bus:["Buses & taxis","حافلات وسيارات أجرة"],
-    kiosk:["Kiosks","أكشاك"], social:["Social media","تواصل اجتماعي"], events:["Events","فعاليات"], radio:["Radio","إذاعة"]
+    kiosk:["Kiosks","أكشاك"], social:["Social","تواصل اجتماعي"], events:["Events","فعاليات"], radio:["Radio","إذاعة"]
   };
   var EMIRATES = [
     { id:"abudhabi", name:"Abu Dhabi",      ar:"أبوظبي",      lon:54.37, lat:24.47, side:"l", media:["ooh","dooh","bus","kiosk","social","events","radio"] },
@@ -71,7 +71,7 @@
   function buildChips(){
     $("emiratePick").innerHTML = '<button class="chip" type="button" data-e="all">' + T("All UAE", "كل الإمارات") + "</button>" +
       EMIRATES.map(function(e){ return '<button class="chip" type="button" data-e="' + e.id + '">' + nm(e) + "</button>"; }).join("");
-    $("mapFilters").innerHTML = '<button class="chip" type="button" data-f="all">' + T("All media", "كل الأنواع") + "</button>" +
+    $("mapFilters").innerHTML = '<button class="chip" type="button" data-f="all">' + T("All formats") + "</button>" +
       Object.keys(MEDIA).map(function(k){ return '<button class="chip" type="button" data-f="' + k + '">' + T(MEDIA[k][0], MEDIA[k][1]) + "</button>"; }).join("");
     svg.querySelectorAll(".pin").forEach(function(g){ var e = byId[g.dataset.id]; g.querySelector("text").textContent = nm(e); g.setAttribute("aria-label", nm(e)); });
   }
@@ -101,7 +101,7 @@
 
     var list = all ? Object.keys(MEDIA).filter(function(k){ return EMIRATES.some(function(x){ return x.media.indexOf(k) > -1; }); }) : e.media;
     $("mpName").textContent = all ? T("Across the UAE", "في كل الإمارات") : nm(e);
-    $("mpSub").textContent = all ? T("Pick an emirate to see what's available there.", "اختر إمارة لترى ما هو متاح فيها.") : T("Media we can book in " + e.name, "الإعلانات المتاحة في " + e.ar);
+    $("mpSub").textContent = all ? T("Pick an emirate to see what's available there.", "اختر إمارة لترى ما هو متاح فيها.") : T("What we can book in " + e.name);
     $("mpTags").innerHTML = list.map(function(k){ return "<li" + (k === filter ? ' class="hit"' : "") + ">" + T(MEDIA[k][0], MEDIA[k][1]) + "</li>"; }).join("");
     var p = $("mpPlan");
     p.textContent = all ? T("Plan a campaign", "خطّط حملة") : T("Plan a campaign in " + e.name, "خطّط حملة في " + e.ar);
