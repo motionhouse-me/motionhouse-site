@@ -7,7 +7,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="MotionHouse is a UAE media agency. We plan and buy billboards, digital screens, buses and taxis, kiosks, social media, events and radio, then show you what it achieved.">
 <meta name="theme-color" content="#0c0a0b">
-<script>(function(){try{var t=localStorage.getItem('mh-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script>(function(){var t=null;try{t=localStorage.getItem('mh-theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);var l=t?t==='light':window.matchMedia('(prefers-color-scheme: light)').matches;if(l)document.documentElement.classList.add('is-light');})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -23,7 +23,7 @@
 <section class="hero glow">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="eyebrow rise">Media agency · UAE</p>
+      <p class="eyebrow rise">Advertising across the UAE</p>
       <h1 class="rise d1">We get your brand seen by the <span class="lit">right people.</span></h1>
       <p class="lead rise d2">Billboards, screens, buses, social, events and radio across the UAE. We plan where your brand should show up, book it at the right price, and show you what it achieved.</p>
       <div class="btns rise d3">
@@ -44,8 +44,8 @@
 
 <div class="ticker" aria-hidden="true">
   <div class="ticker-track">
-    <span>Billboards</span><span>Digital screens</span><span>Buses &amp; taxis</span><span>Kiosks</span><span>Social media</span><span>Events</span><span>Radio</span>
-    <span>Billboards</span><span>Digital screens</span><span>Buses &amp; taxis</span><span>Kiosks</span><span>Social media</span><span>Events</span><span>Radio</span>
+    <span>Billboards</span><span>Digital screens</span><span>Buses &amp; taxis</span><span>Kiosks</span><span>Social</span><span>Events</span><span>Radio</span>
+    <span>Billboards</span><span>Digital screens</span><span>Buses &amp; taxis</span><span>Kiosks</span><span>Social</span><span>Events</span><span>Radio</span>
   </div>
 </div>
 
@@ -57,11 +57,11 @@
       <h2>Four services, one partner.</h2>
       <p class="lead">We find the right spaces for your campaign, book them at competitive prices and manage everything from start to finish, so you deal with one team.</p>
     </div>
-    <ul class="services">
-      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></svg><h3>Media planning</h3><p>We study your goals and audience, then build a plan for where your campaign should run.</p></li>
-      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.2"/></svg><h3>Media buying</h3><p>We book advertising space and time for you, using our supplier relationships to get competitive prices.</p></li>
-      <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg><h3>Social media</h3><p>Content, copy, shoots and paid ads on the platforms your audience scrolls every day.</p></li>
-      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/></svg><h3>Graphic design</h3><p>We design the ads themselves, from billboard artwork to social posts, so every format looks consistent.</p></li>
+    <ul class="svc">
+      <li><h3>Planning</h3><p>We work out where your campaign should run, based on who you want to reach and what you want to spend.</p></li>
+      <li><h3>Booking</h3><p>We book the billboards, screens and airtime for you, at prices that are hard to get on your own.</p></li>
+      <li><h3>Social</h3><p>Content, copy, shoots and paid ads on TikTok and Instagram, with weekly reports.</p></li>
+      <li><h3>Design</h3><p>We design the ads too, so your billboard and your feed look like the same brand.</p></li>
     </ul>
   </div>
 </section>
@@ -71,62 +71,48 @@
   <div class="wrap">
     <div class="head">
       <p class="eyebrow">Try it</p>
-      <h2>See your brand in motion</h2>
-      <p class="lead">Type your brand name or upload your ad, and see it on a billboard, a bus and a phone feed.</p>
+      <h2>Picture your brand here.</h2>
+      <p class="lead">Type your brand name or upload your own ad, and see it on a real billboard in Dubai.</p>
     </div>
-    <div class="studio">
-      <div class="studio-ctrl">
-        <div class="fld"><span>What do you want to show?</span>
-          <div class="seg" role="group" id="modeSeg">
-            <button type="button" data-mode="text" aria-pressed="true">Text</button>
-            <button type="button" data-mode="image" aria-pressed="false">My image</button>
+
+    <div class="stu">
+      <div class="stu-stage">
+        <canvas id="studioCanvas" width="1037" height="687" role="img" aria-label="Your brand on a billboard"></canvas>
+      </div>
+
+      <div class="stu-scenes" role="group" aria-label="Where to show it" id="sceneSeg">
+        <button type="button" data-scene="unipole" aria-pressed="true"><img src="unipole.jpg" alt="" width="1037" height="687"><span>Roadside</span></button>
+        <button type="button" data-scene="gantry" aria-pressed="false"><img src="gantry.jpg" alt="" width="1040" height="687"><span>Highway</span></button>
+        <button type="button" data-scene="mall" aria-pressed="false"><img src="mall-screen.jpg" alt="" width="910" height="1264"><span>Mall screen</span></button>
+        <button type="button" data-scene="phone" aria-pressed="false"><img src="social.jpg" alt="" width="1541" height="672"><span>Phone</span></button>
+      </div>
+
+      <div class="stu-ctrl">
+        <label class="stu-fld"><span>Brand name</span><input class="in" id="sName" maxlength="22" autocomplete="off" placeholder="Your Brand"></label>
+        <label class="stu-fld"><span>Tagline</span><input class="in" id="sTag" maxlength="40" autocomplete="off" placeholder="Optional"></label>
+        <div class="stu-fld"><span>Colour</span>
+          <div class="swatches">
+            <button class="swatch" type="button" data-c="#95122C" style="background:#95122C" aria-label="Crimson" aria-pressed="true"></button>
+            <button class="swatch" type="button" data-c="#101014" style="background:#101014" aria-label="Black" aria-pressed="false"></button>
+            <button class="swatch" type="button" data-c="#1F5BFF" style="background:#1F5BFF" aria-label="Blue" aria-pressed="false"></button>
+            <button class="swatch" type="button" data-c="#00A86B" style="background:#00A86B" aria-label="Green" aria-pressed="false"></button>
+            <button class="swatch" type="button" data-c="#FF8A00" style="background:#FF8A00" aria-label="Orange" aria-pressed="false"></button>
+            <input type="color" id="sColor" value="#95122C" aria-label="Pick any colour">
           </div>
         </div>
-
-        <div id="textCtrls" class="studio-ctrl">
-          <label class="fld"><span>Your brand name</span>
-            <input class="in" id="sName" maxlength="24" autocomplete="off" placeholder="Your Brand"></label>
-          <label class="fld"><span>Tagline (optional)</span>
-            <input class="in" id="sTag" maxlength="40" autocomplete="off" placeholder="Your tagline"></label>
-          <div class="fld"><span>Brand color</span>
-            <div class="swatches">
-              <button class="swatch" type="button" data-c="#95122C" style="background:#95122C" aria-label="Crimson" aria-pressed="true"></button>
-              <button class="swatch" type="button" data-c="#1F5BFF" style="background:#1F5BFF" aria-label="Blue" aria-pressed="false"></button>
-              <button class="swatch" type="button" data-c="#00A86B" style="background:#00A86B" aria-label="Green" aria-pressed="false"></button>
-              <button class="swatch" type="button" data-c="#FF8A00" style="background:#FF8A00" aria-label="Orange" aria-pressed="false"></button>
-              <button class="swatch" type="button" data-c="#7B2CFF" style="background:#7B2CFF" aria-label="Violet" aria-pressed="false"></button>
-              <button class="swatch" type="button" data-c="#F2F2F2" style="background:#F2F2F2" aria-label="White" aria-pressed="false"></button>
-              <input type="color" id="sColor" value="#95122C" aria-label="Pick any color">
-            </div>
-          </div>
-        </div>
-
-        <div id="imageCtrls" class="fld" hidden>
-          <label class="drop" id="drop" for="sFile">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v4h16v-4"/></svg>
-            <span>Upload your ad or logo</span>
-            <small>JPG or PNG. It stays on your device and isn't uploaded anywhere.</small>
-          </label>
+        <div class="stu-fld"><span>Or use your own ad</span>
+          <label class="btn stu-up" for="sFile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v4h16v-4"/></svg><span id="upLabel">Upload image</span></label>
           <input type="file" id="sFile" accept="image/*" hidden>
-          <div class="file-row" id="fileRow" hidden><span id="fileName"></span><button class="link-btn" type="button" id="clearFile">Remove</button></div>
-        </div>
-
-        <div class="fld"><span>Where to show it</span>
-          <div class="seg" role="group" id="sceneSeg">
-            <button type="button" data-scene="billboard" aria-pressed="true">Billboard</button>
-            <button type="button" data-scene="bus" aria-pressed="false">Bus</button>
-            <button type="button" data-scene="phone" aria-pressed="false">Phone</button>
-          </div>
-        </div>
-
-        <div class="btns">
-          <button class="btn" id="sDownload" type="button">Download image</button>
-          <a class="btn btn-hot" id="sPlan" href="contact.html">Plan this campaign</a>
+          <button class="link-btn" type="button" id="clearFile" hidden>Remove image</button>
         </div>
       </div>
-      <div class="studio-stage">
-        <canvas id="studioCanvas" width="1280" height="720" role="img" aria-label="Preview of your brand on a billboard"></canvas>
-        <p class="stage-note">A quick preview. We'll send real mockups at the actual site's dimensions.</p>
+
+      <div class="stu-foot">
+        <p class="stage-note">Your image stays on your device. We'll send real mockups for your actual locations.</p>
+        <div class="btns">
+          <button class="btn" id="sDownload" type="button">Download</button>
+          <a class="btn btn-hot" id="sPlan" href="contact.html">Plan this campaign</a>
+        </div>
       </div>
     </div>
   </div>
@@ -140,8 +126,8 @@
       <a class="go" href="services.html">
         <img src="lampposts.jpg" alt="" loading="lazy" width="1040" height="687">
         <h3>Services</h3>
-        <p>Seven kinds of media, and a map of what's available in each emirate.</p>
-        <span class="more"><span>See the media</span> <span class="flip">→</span></span>
+        <p>Billboards, screens, transport and social, and what's available in each emirate.</p>
+        <span class="more"><span>See what we offer</span> <span class="flip">→</span></span>
       </a>
       <a class="go" href="how-we-work.html">
         <img src="metro.jpg" alt="" loading="lazy" width="1600" height="430">
