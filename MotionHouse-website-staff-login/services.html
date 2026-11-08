@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Services | MotionHouse</title>
+<meta name="description" content="Billboards, digital screens, buses and taxis, kiosks, social media, events and radio across the UAE. One team, every kind of media.">
+<meta name="theme-color" content="#0c0a0b">
+<script>(function(){var t=null;try{t=localStorage.getItem('mh-theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);var l=t?t==='light':window.matchMedia('(prefers-color-scheme: light)').matches;if(l)document.documentElement.classList.add('is-light');})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="icon.png">
+</head>
+<body data-page="services">
+<div id="site-header"></div>
+
+<main id="main">
+
+<section class="page-head glow">
+  <div class="wrap">
+    <p class="eyebrow rise">Services</p>
+    <h1 class="rise d1">Everywhere your customers look.</h1>
+    <p class="lead rise d2">Pick one, mix a few, or let us build the whole campaign.</p>
+  </div>
+</section>
+
+<section class="band" id="media">
+  <div class="wrap">
+    <div class="media">
+      <article class="mcard">
+        <figure><img src="unipole.jpg" alt="A MotionHouse unipole billboard beside a road" loading="lazy" width="1541" height="672"></figure>
+        <div class="mbody"><span class="mtag">OOH</span><h3>Billboards</h3><p>Unipoles, highway gantries, lamppost and bridge banners on the UAE's busiest roads.</p><p class="great"><b>Great for</b> awareness in busy places.</p></div>
+      </article>
+      <article class="mcard">
+        <figure><img src="mall-screen.jpg" alt="A digital screen in a mall showing a MotionHouse ad" loading="lazy" width="1541" height="672"></figure>
+        <div class="mbody"><span class="mtag">DOOH</span><h3>Digital screens</h3><p>Video and animation on LED screens that can change by time of day.</p><p class="great"><b>Great for</b> campaigns you can update fast.</p></div>
+      </article>
+      <article class="mcard">
+        <figure><img src="bus.jpg" alt="A city bus wrapped in a MotionHouse ad" loading="lazy" width="1541" height="672"></figure>
+        <div class="mbody"><span class="mtag">Transit</span><h3>Buses &amp; taxis</h3><p>Wraps on buses, taxis and metro carriages, plus backlit posters at bus shelters.</p><p class="great"><b>Great for</b> reach across the whole city.</p></div>
+      </article>
+      <article class="mcard">
+        <figure><img src="kiosk.jpg" alt="A MotionHouse branded kiosk in a mall" loading="lazy" width="1541" height="672"></figure>
+        <div class="mbody"><span class="mtag">Retail</span><h3>Kiosks</h3><p>Stands in malls where people can see, touch and try your product.</p><p class="great"><b>Great for</b> launches and face-to-face contact.</p></div>
+      </article>
+      <article class="mcard">
+        <figure><img src="social.jpg" alt="A hand holding a phone showing a social media feed" loading="lazy" width="1541" height="672"></figure>
+        <div class="mbody"><span class="mtag">TikTok · Instagram</span><h3>Social</h3><p>Content, paid ads and community management, with weekly reports.</p><p class="great"><b>Great for</b> younger audiences and building a community.</p></div>
+      </article>
+      <article class="mcard">
+        <figure><img src="events.jpg" alt="A launch event with a stage and a large crowd" loading="lazy" width="1541" height="672"></figure>
+        <div class="mbody"><span class="mtag">Live</span><h3>Events</h3><p>We promote, organise and manage launches and activations.</p><p class="great"><b>Great for</b> moments people remember.</p></div>
+      </article>
+      <article class="mcard">
+        <figure><img src="radio.jpg" alt="A car dashboard with the radio on" loading="lazy" width="1541" height="672"></figure>
+        <div class="mbody"><span class="mtag">Audio</span><h3>Radio</h3><p>Spots on UAE radio stations.</p><p class="great"><b>Great for</b> reaching people on the commute.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="band band-alt" id="where">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Where we advertise</p>
+      <h2>Everywhere your audience is.</h2>
+      <p class="lead">Pick an emirate to light it up on the map, or pick a format to see where it's available.</p>
+    </div>
+    <div class="mapbox">
+      <div class="map-stage">
+        <svg id="uaeMap" viewBox="0 0 800 640" role="img" aria-label="Map of the UAE with the seven emirates"></svg>
+      </div>
+      <div class="map-side">
+        <div class="fld"><span>Emirate</span><div class="chips" id="emiratePick"></div></div>
+        <div class="fld"><span>Format</span><div class="chips" id="mapFilters"></div></div>
+        <div class="map-panel" aria-live="polite">
+          <h3 id="mpName"></h3>
+          <p class="mp-sub" id="mpSub"></p>
+          <ul class="tags" id="mpTags"></ul>
+          <a class="btn btn-hot" id="mpPlan" href="contact.html"></a>
+        </div>
+      </div>
+    </div>
+    <ul class="places">
+      <li><b>Roads &amp; highways</b><span>Billboards, LED screens</span></li>
+      <li><b>Malls</b><span>Screens, kiosks, events</span></li>
+      <li><b>Public transport</b><span>Buses, taxis, metro</span></li>
+      <li><b>Online</b><span>TikTok, Instagram</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap cta-in">
+    <h2>Ready to get your brand seen?</h2>
+    <a class="btn" href="contact.html">Plan my campaign</a>
+  </div>
+</section>
+
+</main>
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script src="map.js"></script>
+</body>
+</html>

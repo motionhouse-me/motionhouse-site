@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MotionHouse</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="MotionHouse is a UAE media agency. We plan and buy billboards, digital screens, buses and taxis, kiosks, social media, events and radio, then show you what it achieved.">
+<meta name="theme-color" content="#0c0a0b">
+<script>(function(){var t=null;try{t=localStorage.getItem('mh-theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);var l=t?t==='light':window.matchMedia('(prefers-color-scheme: light)').matches;if(l)document.documentElement.classList.add('is-light');})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="icon.png">
+</head>
+<body data-page="home">
+<div id="site-header"></div>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero glow">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow rise">Advertising across the UAE</p>
+      <h1 class="rise d1">We get your brand seen by the <span class="lit">right people.</span></h1>
+      <p class="lead rise d2">Billboards, screens, buses, social, events and radio across the UAE. We plan where your brand should show up, book it at the right price, and show you what it achieved.</p>
+      <div class="btns rise d3">
+        <a class="btn btn-hot" href="contact.html"><span>Plan my campaign</span> <svg class="flip" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn" href="#studio">See your brand on a billboard</a>
+      </div>
+    </div>
+    <figure class="screen rise d2">
+      <img class="on" src="gantry.jpg" alt="A MotionHouse billboard on a highway gantry in Dubai" data-label="Billboards" width="1040" height="687" fetchpriority="high">
+      <img src="bus.jpg" alt="" data-label="Buses &amp; taxis" width="1600" height="431">
+      <img src="metro.jpg" alt="" data-label="Metro" width="1600" height="430">
+      <img src="kiosk.jpg" alt="" data-label="Malls &amp; kiosks" width="1135" height="1264">
+      <img src="mall-screen.jpg" alt="" data-label="Digital screens" width="910" height="1264">
+      <figcaption><span><i class="dot"></i><span>Now showing</span></span><b id="screenCap">Billboards</b></figcaption>
+    </figure>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>Billboards</span><span>Digital screens</span><span>Buses &amp; taxis</span><span>Kiosks</span><span>Social</span><span>Events</span><span>Radio</span>
+    <span>Billboards</span><span>Digital screens</span><span>Buses &amp; taxis</span><span>Kiosks</span><span>Social</span><span>Events</span><span>Radio</span>
+  </div>
+</div>
+
+<!-- WHAT WE DO -->
+<section class="band">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">What we do</p>
+      <h2>Four services, one partner.</h2>
+      <p class="lead">We find the right spaces for your campaign, book them at competitive prices and manage everything from start to finish, so you deal with one team.</p>
+    </div>
+    <ul class="svc">
+      <li><h3>Planning</h3><p>We work out where your campaign should run, based on who you want to reach and what you want to spend.</p></li>
+      <li><h3>Booking</h3><p>We book the billboards, screens and airtime for you, at prices that are hard to get on your own.</p></li>
+      <li><h3>Social</h3><p>Content, copy, shoots and paid ads on TikTok and Instagram, with weekly reports.</p></li>
+      <li><h3>Design</h3><p>We design the ads too, so your billboard and your feed look like the same brand.</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- STUDIO -->
+<section class="band band-alt" id="studio">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Try it</p>
+      <h2>Picture your brand here.</h2>
+      <p class="lead">Type your brand name or upload your own ad, and see it on a real billboard in Dubai.</p>
+    </div>
+
+    <div class="stu">
+      <div class="stu-stage">
+        <canvas id="studioCanvas" width="1037" height="687" role="img" aria-label="Your brand on a billboard"></canvas>
+      </div>
+
+      <div class="stu-scenes" role="group" aria-label="Where to show it" id="sceneSeg">
+        <button type="button" data-scene="unipole" aria-pressed="true"><img src="unipole.jpg" alt="" width="1037" height="687"><span>Roadside</span></button>
+        <button type="button" data-scene="gantry" aria-pressed="false"><img src="gantry.jpg" alt="" width="1040" height="687"><span>Highway</span></button>
+        <button type="button" data-scene="mall" aria-pressed="false"><img src="mall-screen.jpg" alt="" width="910" height="1264"><span>Mall screen</span></button>
+        <button type="button" data-scene="phone" aria-pressed="false"><img src="social.jpg" alt="" width="1541" height="672"><span>Phone</span></button>
+      </div>
+
+      <div class="stu-ctrl">
+        <label class="stu-fld"><span>Brand name</span><input class="in" id="sName" maxlength="22" autocomplete="off" placeholder="Your Brand"></label>
+        <label class="stu-fld"><span>Tagline</span><input class="in" id="sTag" maxlength="40" autocomplete="off" placeholder="Optional"></label>
+        <div class="stu-fld"><span>Colour</span>
+          <div class="swatches">
+            <button class="swatch" type="button" data-c="#95122C" style="background:#95122C" aria-label="Crimson" aria-pressed="true"></button>
+            <button class="swatch" type="button" data-c="#101014" style="background:#101014" aria-label="Black" aria-pressed="false"></button>
+            <button class="swatch" type="button" data-c="#1F5BFF" style="background:#1F5BFF" aria-label="Blue" aria-pressed="false"></button>
+            <button class="swatch" type="button" data-c="#00A86B" style="background:#00A86B" aria-label="Green" aria-pressed="false"></button>
+            <button class="swatch" type="button" data-c="#FF8A00" style="background:#FF8A00" aria-label="Orange" aria-pressed="false"></button>
+            <input type="color" id="sColor" value="#95122C" aria-label="Pick any colour">
+          </div>
+        </div>
+        <div class="stu-fld"><span>Or use your own ad</span>
+          <label class="btn stu-up" for="sFile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v4h16v-4"/></svg><span id="upLabel">Upload image</span></label>
+          <input type="file" id="sFile" accept="image/*" hidden>
+          <button class="link-btn" type="button" id="clearFile" hidden>Remove image</button>
+        </div>
+      </div>
+
+      <div class="stu-foot">
+        <p class="stage-note">Your image stays on your device. We'll send real mockups for your actual locations.</p>
+        <div class="btns">
+          <button class="btn" id="sDownload" type="button">Download</button>
+          <a class="btn btn-hot" id="sPlan" href="contact.html">Plan this campaign</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLORE -->
+<section class="band">
+  <div class="wrap">
+    <div class="head"><p class="eyebrow">Explore</p><h2>Everything your brand needs, in one place.</h2></div>
+    <div class="tiles">
+      <a class="go" href="services.html">
+        <img src="lampposts.jpg" alt="" loading="lazy" width="1040" height="687">
+        <h3>Services</h3>
+        <p>Billboards, screens, transport and social, and what's available in each emirate.</p>
+        <span class="more"><span>See what we offer</span> <span class="flip">→</span></span>
+      </a>
+      <a class="go" href="how-we-work.html">
+        <img src="metro.jpg" alt="" loading="lazy" width="1600" height="430">
+        <h3>How we work</h3>
+        <p>From your goals to a live campaign, and the full study you get after.</p>
+        <span class="more"><span>See the steps</span> <span class="flip">→</span></span>
+      </a>
+      <a class="go" href="contact.html">
+        <img src="shelter.jpg" alt="" loading="lazy" width="1600" height="430">
+        <h3>Contact</h3>
+        <p>Tell us your goals. We'll come back with a plan.</p>
+        <span class="more"><span>Send your brief</span> <span class="flip">→</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script src="studio.js"></script>
+</body>
+</html>

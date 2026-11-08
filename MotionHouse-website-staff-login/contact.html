@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact | MotionHouse</title>
+<meta name="description" content="Tell us your goals, your audience and your budget. MotionHouse will come back with a plan.">
+<meta name="theme-color" content="#0c0a0b">
+<script>(function(){var t=null;try{t=localStorage.getItem('mh-theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);var l=t?t==='light':window.matchMedia('(prefers-color-scheme: light)').matches;if(l)document.documentElement.classList.add('is-light');})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="icon.png">
+</head>
+<body data-page="contact">
+<div id="site-header"></div>
+
+<main id="main">
+<section class="band glow">
+  <div class="wrap c-grid">
+    <div class="c-left">
+      <div class="prose">
+        <p class="eyebrow rise">Contact</p>
+        <h1 class="rise d1" style="font-size:clamp(2.3rem,5vw,4rem)">Let's get your brand seen.</h1>
+        <p class="lead rise d2">Two ways to start. Pick whichever is easier for you.</p>
+      </div>
+      <div class="way way-direct">
+        <p class="way-tag"><b>1</b>Talk to us now</p>
+        <p class="way-sub">Call or email us directly.</p>
+        <div class="direct">
+          <small>Email</small>
+          <a id="mailLink" href="mailto:sales@motionhouse.me">sales@motionhouse.me</a>
+          <small style="margin-top:10px">Phone</small>
+          <a href="tel:+971566619819">+971 56 661 9819</a>
+        </div>
+      </div>
+      <p class="way-or" aria-hidden="true"><span>or</span></p>
+    </div>
+
+    <form class="cform" id="contactForm" novalidate>
+      <div class="way-head">
+        <p class="way-tag"><b>2</b>Send us a brief</p>
+        <p class="way-sub">Fill this in and we'll reach out to you.</p>
+      </div>
+      <fieldset id="gBudget">
+        <legend><b>01</b><span>Your rough budget</span></legend>
+        <div class="bud untouched" id="bud">
+          <div class="bud-read"><output class="bud-val" id="budgetVal" for="budget"></output></div>
+          <input class="cr" type="range" id="budget" min="0" max="7" step="1" value="2" aria-label="Approximate budget">
+          <div class="range-scale" dir="ltr"><span>AED 10k</span><span>AED 1M+</span></div>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="btype" value="One-off campaign" id="bt1" checked><span>One-off campaign</span></label>
+            <label class="opt"><input type="radio" name="btype" value="Per month" id="bt2"><span>Per month</span></label>
+          </div>
+          <p class="cnote">Monthly budgets are counted over a 3-month campaign.</p>
+        </div>
+      </fieldset>
+
+      <fieldset id="gNeed">
+        <legend><b>02</b><span>What do you need?</span></legend>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="need" value="Billboards" id="n1"><span>Billboards</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Digital screens" id="n2"><span>Digital screens</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Buses & taxis" id="n3"><span>Buses &amp; taxis</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Kiosks" id="n4"><span>Kiosks</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Social" id="n5"><span>Social</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Events" id="n6"><span>Events</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Radio" id="n7"><span>Radio</span></label>
+          <label class="opt"><input type="checkbox" name="need" value="Not sure yet" id="n8"><span>Not sure yet</span></label>
+        </div>
+        <p class="cnote" id="needNote" hidden></p>
+      </fieldset>
+
+      <fieldset id="gArea">
+        <legend><b>03</b><span>Where do you want to be seen?</span></legend>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="area" value="Across the UAE" id="a0"><span>Across the UAE</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Abu Dhabi" id="a1"><span>Abu Dhabi</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Dubai" id="a2"><span>Dubai</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Sharjah" id="a3"><span>Sharjah</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Ajman" id="a4"><span>Ajman</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Umm Al Quwain" id="a5"><span>Umm Al Quwain</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Ras Al Khaimah" id="a6"><span>Ras Al Khaimah</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Fujairah" id="a7"><span>Fujairah</span></label>
+          <label class="opt"><input type="checkbox" name="area" value="Not sure yet" id="a8"><span>Not sure yet</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><b>04</b><span>How do we reach you?</span></legend>
+        <div class="row2">
+          <label class="cf"><span>Your name</span><input name="name" id="fName" autocomplete="name" maxlength="60"><small class="ferr" id="eName"></small></label>
+          <label class="cf"><span>Brand or company</span><input name="company" id="fCompany" autocomplete="organization"></label>
+        </div>
+        <div class="row2">
+          <label class="cf"><span>Email</span><input type="email" name="email" id="fEmail" autocomplete="email" inputmode="email" maxlength="100" placeholder="name@company.com" dir="ltr"><small class="ferr" id="eEmail"></small></label>
+          <label class="cf"><span>Phone</span><input type="tel" name="phone" id="fPhone" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="+971 50 123 4567" dir="ltr"><small class="ferr" id="ePhone"></small></label>
+        </div>
+        <p class="cnote">Fill in one or both. Just one is enough, and we'll reach out that way.</p>
+        <label class="cf"><span>Anything else? (optional)</span><textarea name="message" id="fMsg" placeholder="Launch date, audience, the emirate you care about most…"></textarea></label>
+      </fieldset>
+
+      <button class="btn btn-hot c-send" type="submit">Send my brief</button>
+      <p class="status" id="formStatus" role="status"></p>
+      <div class="sent" id="sent" hidden>
+        <p class="cnote"><span>If your email app didn't open, copy your brief and send it to</span> <b id="mailText" dir="ltr">sales@motionhouse.me</b>.</p>
+        <pre id="briefText" dir="ltr"></pre>
+        <button class="btn" type="button" id="copyBtn">Copy brief</button>
+      </div>
+    </form>
+  </div>
+</section>
+</main>
+
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script src="contact.js"></script>
+</body>
+</html>
